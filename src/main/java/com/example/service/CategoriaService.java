@@ -85,4 +85,31 @@ public class CategoriaService {
             throw new RuntimeException("Erro ao atualizar categoria: " + e.getMessage(), e);
         }
     }
+
+    public void remover(long id) {
+        String sqlCheck = "SELECT COUNT(*) FROM produto WHERE categoriaId = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck)) {
+            stmtCheck.setLong(1, id);
+            try (ResultSet rs = stmtCheck.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    throw new RuntimeException("Não é possível remover a categoria pois existem produtos vinculados a ela.");
+                }
+            }
+        } catch (RuntimeException re) {
+            throw re;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao verificar produtos da categoria: " + e.getMessage(), e);
+        }
+
+        String sql = "DELETE FROM categoria WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+            System.out.println("Categoria removida: " + id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao remover categoria: " + e.getMessage(), e);
+        }
+    }
 }
