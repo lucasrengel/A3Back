@@ -29,4 +29,24 @@ public class CategoriaService {
             throw new RuntimeException("Erro ao adicionar categoria: " + e.getMessage(), e);
         }
     }
+
+    public List<Categoria> listar() {
+        List<Categoria> lista = new ArrayList<>();
+        String sql = "SELECT id, nome, tamanho, embalagem FROM categoria";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Categoria(
+                    rs.getLong("id"),
+                    rs.getString("nome"),
+                    rs.getString("tamanho"),
+                    rs.getString("embalagem")
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar categorias: " + e.getMessage(), e);
+        }
+        return lista;
+    }
 }
