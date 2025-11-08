@@ -70,4 +70,19 @@ public class CategoriaService {
         }
         return null;
     }
+
+    public void atualizar(Categoria c) {
+        String sql = "UPDATE categoria SET nome = ?, tamanho = ?, embalagem = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, c.getNome());
+            stmt.setString(2, c.getTamanho());
+            stmt.setString(3, c.getEmbalagem());
+            stmt.setLong(4, c.getId());
+            stmt.executeUpdate();
+            System.out.println("Categoria atualizada: " + c.getNome());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar categoria: " + e.getMessage(), e);
+        }
+    }
 }
