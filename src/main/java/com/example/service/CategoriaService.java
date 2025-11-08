@@ -49,4 +49,25 @@ public class CategoriaService {
         }
         return lista;
     }
+
+    public Categoria buscar(long id) {
+        String sql = "SELECT id, nome, tamanho, embalagem FROM categoria WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Categoria(
+                        rs.getLong("id"),
+                        rs.getString("nome"),
+                        rs.getString("tamanho"),
+                        rs.getString("embalagem")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar categoria: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }
