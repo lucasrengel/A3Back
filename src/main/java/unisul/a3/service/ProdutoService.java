@@ -57,4 +57,29 @@ public class ProdutoService {
         }
         return produtos;
     }
+
+    public Produto buscarPorId(long id) {
+        String sql = "SELECT * FROM produto WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Produto p = new Produto();
+                    p.setId(rs.getLong("id"));
+                    p.setNome(rs.getString("nome"));
+                    p.setPrecoUnitario(rs.getDouble("preco"));
+                    p.setUnidade(rs.getString("unidade"));
+                    p.setQuantidadeEstoque(rs.getInt("quantidadeEstoque"));
+                    p.setQuantidadeMinima(rs.getInt("quantidadeMinima"));
+                    p.setQuantidadeMaxima(rs.getInt("quantidadeMaxima"));
+                    p.setCategoriaId(rs.getLong("categoriaId"));
+                    return p;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar produto: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }
