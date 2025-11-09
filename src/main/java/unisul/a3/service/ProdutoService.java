@@ -82,4 +82,23 @@ public class ProdutoService {
         }
         return null;
     }
+
+    public void atualizar(Produto p) {
+        String sql = "UPDATE produto SET nome = ?, preco = ?, unidade = ?, quantidadeEstoque = ?, quantidadeMinima = ?, quantidadeMaxima = ?, categoriaId = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, p.getNome());
+            stmt.setDouble(2, p.getPrecoUnitario());
+            stmt.setString(3, p.getUnidade());
+            stmt.setInt(4, p.getQuantidadeEstoque());
+            stmt.setInt(5, p.getQuantidadeMinima());
+            stmt.setInt(6, p.getQuantidadeMaxima());
+            stmt.setLong(7, p.getCategoriaId());
+            stmt.setLong(8, p.getId());
+            stmt.executeUpdate();
+            System.out.println("Produto atualizado: " + p.getNome());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage(), e);
+        }
+    }
 }
