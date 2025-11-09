@@ -101,4 +101,16 @@ public class ProdutoService {
             throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage(), e);
         }
     }
+
+    public void remover(long id) {
+        String sql = "DELETE FROM produto WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+            System.out.println("Produto removido: " + id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao remover produto: " + e.getMessage(), e);
+        }
+    }
 }
