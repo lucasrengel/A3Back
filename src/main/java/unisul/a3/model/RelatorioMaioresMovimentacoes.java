@@ -1,4 +1,4 @@
-package com.example.model;
+package unisul.a3.model;
 
 import java.io.Serializable;
 

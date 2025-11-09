@@ -1,7 +1,7 @@
-package com.example.service;
+package unisul.a3.service;
 
-import com.example.config.DatabaseConnection;
-import com.example.model.Produto;
+import unisul.a3.config.DatabaseConnection;
+import unisul.a3.model.Produto;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
