@@ -83,4 +83,25 @@ public class MovimentacaoService {
             throw new RuntimeException("Erro ao registrar movimentação: " + e.getMessage(), e);
         }
     }
+
+    public List<Movimentacao> listar() {
+        List<Movimentacao> lista = new ArrayList<>();
+        String sql = "SELECT id, produtoId, tipo, quantidade, DATE_FORMAT(dataOperacao, '%Y-%m-%d') as data FROM movimentacao ORDER BY dataOperacao DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Movimentacao(
+                    rs.getLong("id"),
+                    rs.getLong("produtoId"),
+                    rs.getString("data"),
+                    rs.getInt("quantidade"),
+                    rs.getString("tipo")
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar movimentações: " + e.getMessage(), e);
+        }
+        return lista;
+    }
 }
