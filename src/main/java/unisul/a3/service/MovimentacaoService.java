@@ -104,4 +104,26 @@ public class MovimentacaoService {
         }
         return lista;
     }
+
+    public Movimentacao buscar(long id) {
+        String sql = "SELECT id, produtoId, tipo, quantidade, DATE_FORMAT(dataOperacao, '%Y-%m-%d') as data FROM movimentacao WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Movimentacao(
+                        rs.getLong("id"),
+                        rs.getLong("produtoId"),
+                        rs.getString("data"),
+                        rs.getInt("quantidade"),
+                        rs.getString("tipo")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar movimentação: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }
