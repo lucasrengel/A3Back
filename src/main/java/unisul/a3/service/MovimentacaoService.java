@@ -1,0 +1,86 @@
+package unisul.a3.service;
+
+import unisul.a3.config.DatabaseConnection;
+import unisul.a3.model.Movimentacao;
+import org.springframework.stereotype.Service;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class MovimentacaoService {
+
+    public String registrar(Movimentacao m) {
+        String selectSql = "SELECT nome, quantidadeEstoque, quantidadeMinima, quantidadeMaxima FROM produto WHERE id = ? FOR UPDATE";
+        String updateSql = "UPDATE produto SET quantidadeEstoque = ? WHERE id = ?";
+        String insertSql = "INSERT INTO movimentacao (produtoId, tipo, quantidade, dataOperacao) VALUES (?, ?, ?, NOW())";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+
+                try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+                    selectStmt.setLong(1, m.getProdutoId());
+                    try (ResultSet rs = selectStmt.executeQuery()) {
+                        if (!rs.next()) {
+                            conn.rollback();
+                            return "ERRO: Produto com ID " + m.getProdutoId() + " não encontrado.";
+                        }
+
+                        String nome = rs.getString("nome");
+                        int quantidadeEstoque = rs.getInt("quantidadeEstoque");
+                        int quantidadeMinima = rs.getInt("quantidadeMinima");
+                        int quantidadeMaxima = rs.getInt("quantidadeMaxima");
+
+                        int novoEstoque = quantidadeEstoque;
+                        StringBuilder aviso = new StringBuilder("Movimentação registrada.");
+
+                        if ("SAIDA".equalsIgnoreCase(m.getTipo())) {
+                            if (quantidadeEstoque < m.getQuantidade()) {
+                                conn.rollback();
+                                return "ERRO: Estoque insuficiente para " + nome + ".";
+                            }
+                            novoEstoque = quantidadeEstoque - m.getQuantidade();
+                            if (novoEstoque < quantidadeMinima) {
+                                aviso.append("\nAVISO: Produto '").append(nome).append("' abaixo do mínimo.");
+                            }
+                        } else if ("ENTRADA".equalsIgnoreCase(m.getTipo())) {
+                            novoEstoque = quantidadeEstoque + m.getQuantidade();
+                            if (novoEstoque > quantidadeMaxima) {
+                                aviso.append("\nAVISO: Produto '").append(nome).append("' acima do máximo.");
+                            }
+                        } else {
+                            conn.rollback();
+                            return "ERRO: Tipo de movimentação desconhecido.";
+                        }
+
+                        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                            updateStmt.setInt(1, novoEstoque);
+                            updateStmt.setLong(2, m.getProdutoId());
+                            updateStmt.executeUpdate();
+                        }
+
+                        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                            insertStmt.setLong(1, m.getProdutoId());
+                            insertStmt.setString(2, m.getTipo());
+                            insertStmt.setInt(3, m.getQuantidade());
+                            insertStmt.executeUpdate();
+                        }
+
+                        conn.commit();
+                        System.out.println(aviso.toString().replace("\n", " "));
+                        return aviso.toString();
+                    }
+                }
+            } catch (Exception e) {
+                try { conn.rollback(); } catch (Exception ex) { /* ignore */ }
+                throw new RuntimeException("Erro ao registrar movimentação: " + e.getMessage(), e);
+            } finally {
+                try { conn.setAutoCommit(true); } catch (Exception ex) { /* ignore */ }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao registrar movimentação: " + e.getMessage(), e);
+        }
+    }
+}
