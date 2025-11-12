@@ -126,4 +126,99 @@ public class MovimentacaoService {
         }
         return null;
     }
+
+    public String atualizar(Movimentacao novaMovimentacao) {
+        Movimentacao antiga = buscar(novaMovimentacao.getId());
+        if (antiga == null) {
+            return "ERRO: Movimentação não encontrada.";
+        }
+
+        String selectProduto = "SELECT nome, quantidadeEstoque, quantidadeMinima, quantidadeMaxima FROM produto WHERE id = ?";
+        String updateEstoque = "UPDATE produto SET quantidadeEstoque = ? WHERE id = ?";
+        String updateMovimentacao = "UPDATE movimentacao SET produtoId = ?, tipo = ?, quantidade = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement stmt = conn.prepareStatement(selectProduto)) {
+                    stmt.setLong(1, antiga.getProdutoId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            int estoqueAtual = rs.getInt("quantidadeEstoque");
+                            int estoqueRevertido = estoqueAtual;
+                            
+                            if ("ENTRADA".equalsIgnoreCase(antiga.getTipo())) {
+                                estoqueRevertido -= antiga.getQuantidade();
+                            } else {
+                                estoqueRevertido += antiga.getQuantidade();
+                            }
+                            
+                            try (PreparedStatement updateStmt = conn.prepareStatement(updateEstoque)) {
+                                updateStmt.setInt(1, estoqueRevertido);
+                                updateStmt.setLong(2, antiga.getProdutoId());
+                                updateStmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
+
+                StringBuilder aviso = new StringBuilder("Movimentação atualizada.");
+                try (PreparedStatement stmt = conn.prepareStatement(selectProduto)) {
+                    stmt.setLong(1, novaMovimentacao.getProdutoId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (!rs.next()) {
+                            conn.rollback();
+                            return "ERRO: Produto não encontrado.";
+                        }
+
+                        String nome = rs.getString("nome");
+                        int estoqueAtual = rs.getInt("quantidadeEstoque");
+                        int quantidadeMinima = rs.getInt("quantidadeMinima");
+                        int quantidadeMaxima = rs.getInt("quantidadeMaxima");
+                        int novoEstoque = estoqueAtual;
+
+                        if ("SAIDA".equalsIgnoreCase(novaMovimentacao.getTipo())) {
+                            if (estoqueAtual < novaMovimentacao.getQuantidade()) {
+                                conn.rollback();
+                                return "ERRO: Estoque insuficiente para " + nome + ".";
+                            }
+                            novoEstoque -= novaMovimentacao.getQuantidade();
+                            if (novoEstoque < quantidadeMinima) {
+                                aviso.append("\nAVISO: Produto '").append(nome).append("' abaixo do mínimo.");
+                            }
+                        } else {
+                            novoEstoque += novaMovimentacao.getQuantidade();
+                            if (novoEstoque > quantidadeMaxima) {
+                                aviso.append("\nAVISO: Produto '").append(nome).append("' acima do máximo.");
+                            }
+                        }
+
+                        try (PreparedStatement updateStmt = conn.prepareStatement(updateEstoque)) {
+                            updateStmt.setInt(1, novoEstoque);
+                            updateStmt.setLong(2, novaMovimentacao.getProdutoId());
+                            updateStmt.executeUpdate();
+                        }
+                    }
+                }
+
+                try (PreparedStatement stmt = conn.prepareStatement(updateMovimentacao)) {
+                    stmt.setLong(1, novaMovimentacao.getProdutoId());
+                    stmt.setString(2, novaMovimentacao.getTipo());
+                    stmt.setInt(3, novaMovimentacao.getQuantidade());
+                    stmt.setLong(4, novaMovimentacao.getId());
+                    stmt.executeUpdate();
+                }
+
+                conn.commit();
+                return aviso.toString();
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar movimentação: " + e.getMessage(), e);
+        }
+    }
 }
