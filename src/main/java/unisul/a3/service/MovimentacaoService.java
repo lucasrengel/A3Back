@@ -221,4 +221,61 @@ public class MovimentacaoService {
             throw new RuntimeException("Erro ao atualizar movimentação: " + e.getMessage(), e);
         }
     }
+
+    public void remover(long id) {
+        Movimentacao mov = buscar(id);
+        if (mov == null) {
+            throw new RuntimeException("Movimentação não encontrada.");
+        }
+
+        String selectProduto = "SELECT quantidadeEstoque FROM produto WHERE id = ?";
+        String updateEstoque = "UPDATE produto SET quantidadeEstoque = ? WHERE id = ?";
+        String deleteMovimentacao = "DELETE FROM movimentacao WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement stmt = conn.prepareStatement(selectProduto)) {
+                    stmt.setLong(1, mov.getProdutoId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            int estoqueAtual = rs.getInt("quantidadeEstoque");
+                            int novoEstoque = estoqueAtual;
+                            
+                            if ("ENTRADA".equalsIgnoreCase(mov.getTipo())) {
+                                novoEstoque -= mov.getQuantidade();
+                            } else {
+                                novoEstoque += mov.getQuantidade();
+                            }
+                            
+                            if (novoEstoque < 0) {
+                                novoEstoque = 0;
+                            }
+                            
+                            try (PreparedStatement updateStmt = conn.prepareStatement(updateEstoque)) {
+                                updateStmt.setInt(1, novoEstoque);
+                                updateStmt.setLong(2, mov.getProdutoId());
+                                updateStmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
+
+                try (PreparedStatement stmt = conn.prepareStatement(deleteMovimentacao)) {
+                    stmt.setLong(1, id);
+                    stmt.executeUpdate();
+                }
+
+                conn.commit();
+                System.out.println("Movimentação removida: " + id);
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao remover movimentação: " + e.getMessage(), e);
+        }
+    }
 }
