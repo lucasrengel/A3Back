@@ -278,4 +278,42 @@ public class MovimentacaoService {
             throw new RuntimeException("Erro ao remover movimentação: " + e.getMessage(), e);
         }
     }
+
+    public Movimentacao buscarMaiorEntrada() {
+        String sql = "SELECT produtoId, tipo, quantidade, DATE_FORMAT(dataOperacao, '%Y-%m-%d') as data FROM movimentacao WHERE tipo = 'ENTRADA' ORDER BY quantidade DESC LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return new Movimentacao(
+                    rs.getLong("produtoId"),
+                    rs.getString("data"),
+                    rs.getInt("quantidade"),
+                    rs.getString("tipo")
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar maior entrada: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+    public Movimentacao buscarMaiorSaida() {
+        String sql = "SELECT produtoId, tipo, quantidade, DATE_FORMAT(dataOperacao, '%Y-%m-%d') as data FROM movimentacao WHERE tipo = 'SAIDA' ORDER BY quantidade DESC LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return new Movimentacao(
+                    rs.getLong("produtoId"),
+                    rs.getString("data"),
+                    rs.getInt("quantidade"),
+                    rs.getString("tipo")
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar maior saída: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }
