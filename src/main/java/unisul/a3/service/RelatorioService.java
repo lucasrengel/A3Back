@@ -4,6 +4,7 @@ import unisul.a3.config.DatabaseConnection;
 import unisul.a3.model.RelatorioListaPreco;
 import unisul.a3.model.RelatorioBalanco;
 import unisul.a3.model.Produto;
+import unisul.a3.model.RelatorioProdutosPorCategoria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +62,23 @@ public class RelatorioService {
 
     public List<Produto> getAbaixoMinimo() {
         return produtoService.listarAbaixoMinimo();
+    }
+
+    public RelatorioProdutosPorCategoria getProdutosPorCategoria() {
+        RelatorioProdutosPorCategoria relatorio = new RelatorioProdutosPorCategoria();
+        String sql = "SELECT c.nome as nomeCategoria, COUNT(p.id) as quantidade FROM categoria c LEFT JOIN produto p ON c.id = p.categoriaId GROUP BY c.nome";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                relatorio.getItens().add(new RelatorioProdutosPorCategoria.ItemCategoria(
+                    rs.getString("nomeCategoria"),
+                    rs.getLong("quantidade")
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar relatório de produtos por categoria: " + e.getMessage(), e);
+        }
+        return relatorio;
     }
 }
