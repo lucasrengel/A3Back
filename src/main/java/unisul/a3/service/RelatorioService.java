@@ -2,6 +2,7 @@ package unisul.a3.service;
 
 import unisul.a3.config.DatabaseConnection;
 import unisul.a3.model.RelatorioListaPreco;
+import unisul.a3.model.RelatorioBalanco;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -29,5 +30,27 @@ public class RelatorioService {
             throw new RuntimeException("Erro ao gerar relatório de lista de preços: " + e.getMessage(), e);
         }
         return new RelatorioListaPreco(itens);
+    }
+
+    public RelatorioBalanco getBalanco() {
+        List<RelatorioBalanco.ItemBalanco> itens = new ArrayList<>();
+        double valorTotalEstoque = 0;
+        String sql = "SELECT nome, quantidadeEstoque, preco FROM produto ORDER BY nome";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                double valorTotalProduto = rs.getDouble("preco") * rs.getInt("quantidadeEstoque");
+                itens.add(new RelatorioBalanco.ItemBalanco(
+                    rs.getString("nome"),
+                    rs.getInt("quantidadeEstoque"),
+                    valorTotalProduto
+                ));
+                valorTotalEstoque += valorTotalProduto;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar relatório de balanço: " + e.getMessage(), e);
+        }
+        return new RelatorioBalanco(itens, valorTotalEstoque);
     }
 }
