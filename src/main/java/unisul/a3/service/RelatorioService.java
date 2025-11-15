@@ -5,6 +5,7 @@ import unisul.a3.model.RelatorioListaPreco;
 import unisul.a3.model.RelatorioBalanco;
 import unisul.a3.model.Produto;
 import unisul.a3.model.RelatorioProdutosPorCategoria;
+import unisul.a3.model.RelatorioMaioresMovimentacoes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class RelatorioService {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private MovimentacaoService movimentacaoService;
 
     public RelatorioListaPreco getListaPreco() {
         List<RelatorioListaPreco.ItemListaPreco> itens = new ArrayList<>();
@@ -79,6 +83,13 @@ public class RelatorioService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar relatório de produtos por categoria: " + e.getMessage(), e);
         }
+        return relatorio;
+    }
+
+    public RelatorioMaioresMovimentacoes getMaioresMovimentacoes() {
+        RelatorioMaioresMovimentacoes relatorio = new RelatorioMaioresMovimentacoes();
+        relatorio.setMaiorEntrada(movimentacaoService.buscarMaiorEntrada());
+        relatorio.setMaiorSaida(movimentacaoService.buscarMaiorSaida());
         return relatorio;
     }
 }
