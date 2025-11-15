@@ -3,6 +3,8 @@ package unisul.a3.service;
 import unisul.a3.config.DatabaseConnection;
 import unisul.a3.model.RelatorioListaPreco;
 import unisul.a3.model.RelatorioBalanco;
+import unisul.a3.model.Produto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -11,6 +13,9 @@ import java.util.List;
 
 @Service
 public class RelatorioService {
+
+    @Autowired
+    private ProdutoService produtoService;
 
     public RelatorioListaPreco getListaPreco() {
         List<RelatorioListaPreco.ItemListaPreco> itens = new ArrayList<>();
@@ -52,5 +57,9 @@ public class RelatorioService {
             throw new RuntimeException("Erro ao gerar relatório de balanço: " + e.getMessage(), e);
         }
         return new RelatorioBalanco(itens, valorTotalEstoque);
+    }
+
+    public List<Produto> getAbaixoMinimo() {
+        return produtoService.listarAbaixoMinimo();
     }
 }

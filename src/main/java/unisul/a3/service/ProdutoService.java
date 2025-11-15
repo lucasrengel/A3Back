@@ -113,4 +113,28 @@ public class ProdutoService {
             throw new RuntimeException("Erro ao remover produto: " + e.getMessage(), e);
         }
     }
+
+    public List<Produto> listarAbaixoMinimo() {
+        List<Produto> lista = new ArrayList<>();
+        String sql = "SELECT id, nome, preco, unidade, quantidadeEstoque, quantidadeMinima, quantidadeMaxima, categoriaId FROM produto WHERE quantidadeEstoque < quantidadeMinima";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Produto p = new Produto();
+                p.setId(rs.getLong("id"));
+                p.setNome(rs.getString("nome"));
+                p.setPrecoUnitario(rs.getDouble("preco"));
+                p.setUnidade(rs.getString("unidade"));
+                p.setQuantidadeEstoque(rs.getInt("quantidadeEstoque"));
+                p.setQuantidadeMinima(rs.getInt("quantidadeMinima"));
+                p.setQuantidadeMaxima(rs.getInt("quantidadeMaxima"));
+                p.setCategoriaId(rs.getLong("categoriaId"));
+                lista.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar produtos abaixo do mínimo: " + e.getMessage(), e);
+        }
+        return lista;
+    }
 }
