@@ -29,4 +29,14 @@ public class ProdutoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping
+    public ResponseEntity<?> adicionar(@RequestBody Produto produto) {
+        try {
+            service.adicionar(produto);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Produto adicionado com sucesso!", "data", produto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
