@@ -39,4 +39,15 @@ public class ProdutoController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable long id, @RequestBody Produto produto) {
+        try {
+            produto.setId(id);
+            service.atualizar(produto);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Produto atualizado com sucesso!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
