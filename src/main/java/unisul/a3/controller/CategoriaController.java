@@ -29,4 +29,14 @@ public class CategoriaController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping
+    public ResponseEntity<?> adicionar(@RequestBody Categoria categoria) {
+        try {
+            service.adicionar(categoria);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Categoria adicionada com sucesso!", "data", categoria));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
