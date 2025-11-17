@@ -20,4 +20,13 @@ public class ProdutoController {
     public List<Produto> listar() {
         return service.listar();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable long id) {
+        Produto p = service.buscarPorId(id);
+        if (p != null) {
+            return ResponseEntity.ok(p);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
