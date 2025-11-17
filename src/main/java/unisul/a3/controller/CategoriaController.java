@@ -20,4 +20,13 @@ public class CategoriaController {
     public List<Categoria> listar() {
         return service.listar();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable long id) {
+        Categoria c = service.buscar(id);
+        if (c != null) {
+            return ResponseEntity.ok(c);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
