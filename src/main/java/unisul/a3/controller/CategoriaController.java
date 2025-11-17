@@ -39,4 +39,15 @@ public class CategoriaController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable long id, @RequestBody Categoria categoria) {
+        try {
+            categoria.setId(id);
+            service.atualizar(categoria);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Categoria atualizada com sucesso!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
