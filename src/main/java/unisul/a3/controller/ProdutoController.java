@@ -50,4 +50,14 @@ public class ProdutoController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remover(@PathVariable long id) {
+        try {
+            service.remover(id);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Produto removido com sucesso!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
