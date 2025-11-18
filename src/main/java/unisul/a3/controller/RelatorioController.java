@@ -18,4 +18,9 @@ public class RelatorioController {
     public RelatorioListaPreco listaPrecos() {
         return service.getListaPreco();
     }
+
+    @GetMapping("/balanco")
+    public RelatorioBalanco balanco() {
+        return service.getBalanco();
+    }
 }
