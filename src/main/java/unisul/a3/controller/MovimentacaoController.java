@@ -20,4 +20,13 @@ public class MovimentacaoController {
     public List<Movimentacao> listar() {
         return service.listar();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable long id) {
+        Movimentacao m = service.buscar(id);
+        if (m != null) {
+            return ResponseEntity.ok(m);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
