@@ -23,4 +23,9 @@ public class RelatorioController {
     public RelatorioBalanco balanco() {
         return service.getBalanco();
     }
+
+    @GetMapping("/abaixo-minimo")
+    public List<Produto> abaixoMinimo() {
+        return service.getAbaixoMinimo();
+    }
 }
