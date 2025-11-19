@@ -28,4 +28,9 @@ public class RelatorioController {
     public List<Produto> abaixoMinimo() {
         return service.getAbaixoMinimo();
     }
+
+    @GetMapping("/por-categoria")
+    public RelatorioProdutosPorCategoria porCategoria() {
+        return service.getProdutosPorCategoria();
+    }
 }
