@@ -33,4 +33,9 @@ public class RelatorioController {
     public RelatorioProdutosPorCategoria porCategoria() {
         return service.getProdutosPorCategoria();
     }
+
+    @GetMapping("/maiores-movimentacoes")
+    public RelatorioMaioresMovimentacoes maioresMovimentacoes() {
+        return service.getMaioresMovimentacoes();
+    }
 }
