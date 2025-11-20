@@ -56,4 +56,14 @@ public class MovimentacaoController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remover(@PathVariable long id) {
+        try {
+            service.remover(id);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Movimentação removida com sucesso!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
