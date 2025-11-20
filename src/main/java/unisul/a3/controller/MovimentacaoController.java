@@ -29,4 +29,17 @@ public class MovimentacaoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping
+    public ResponseEntity<?> registrar(@RequestBody Movimentacao movimentacao) {
+        try {
+            String resultado = service.registrar(movimentacao);
+            if (resultado.startsWith("ERRO")) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "error", resultado));
+            }
+            return ResponseEntity.ok(Map.of("success", true, "message", resultado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
