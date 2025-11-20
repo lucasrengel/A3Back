@@ -42,4 +42,18 @@ public class MovimentacaoController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable long id, @RequestBody Movimentacao movimentacao) {
+        try {
+            movimentacao.setId(id);
+            String resultado = service.atualizar(movimentacao);
+            if (resultado.startsWith("ERRO")) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "error", resultado));
+            }
+            return ResponseEntity.ok(Map.of("success", true, "message", resultado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
