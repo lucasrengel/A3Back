@@ -8,7 +8,7 @@ public class DatabaseConnection {
     private static final String URL =
             System.getProperty(
                     "db.url",
-                    "jdbc:mysql://localhost:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8"
+                    "jdbc:mysql://localhost:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8"
             );
     private static final String USER = "root";
     private static final String PASSWORD = "12345";
@@ -17,7 +17,7 @@ public class DatabaseConnection {
         try {
             String url = System.getProperty(
                     "db.url",
-                    "jdbc:mysql://localhost:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8"
+                    "jdbc:mysql://localhost:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8"
             );
 
             return DriverManager.getConnection(url, USER, PASSWORD);

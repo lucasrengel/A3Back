@@ -17,7 +17,7 @@ class CategoriaServiceTest {
     static void configurarBancoTeste() {
         System.setProperty(
                 "db.url",
-                "jdbc:mysql://localhost:3306/estoque_test?useSSL=false&serverTimezone=UTC"
+                "jdbc:mysql://localhost:3306/estoque_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
         );
     }
 
