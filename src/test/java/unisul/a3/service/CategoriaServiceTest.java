@@ -2,6 +2,7 @@ package unisul.a3.service;
 
 import org.junit.jupiter.api.*;
 import unisul.a3.config.DatabaseConnection;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.Categoria;
 
 import java.sql.Connection;
@@ -23,6 +24,8 @@ class CategoriaServiceTest {
 
     @BeforeEach
     void setup() throws Exception {
+        DatabaseInitializer.initialize();
+
         service = new CategoriaService();
 
         try (Connection conn = DatabaseConnection.getConnection();

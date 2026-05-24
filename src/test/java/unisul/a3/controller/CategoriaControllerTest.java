@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.Categoria;
 import unisul.a3.service.CategoriaService;
 
@@ -18,6 +19,9 @@ class CategoriaControllerTest {
 
     @BeforeEach
     void setup() throws Exception {
+
+        DatabaseInitializer.initialize();
+
 
         controller = new CategoriaController();
 

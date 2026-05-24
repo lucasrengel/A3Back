@@ -2,6 +2,7 @@ package unisul.a3.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.RelatorioBalanco;
 import unisul.a3.model.RelatorioListaPreco;
 import unisul.a3.model.RelatorioMaioresMovimentacoes;
@@ -20,6 +21,8 @@ class RelatorioControllerTest {
 
     @BeforeEach
     void setup() throws Exception {
+
+        DatabaseInitializer.initialize();
 
         controller = new RelatorioController();
 

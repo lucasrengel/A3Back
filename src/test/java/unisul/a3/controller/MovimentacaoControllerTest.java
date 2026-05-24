@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.Movimentacao;
 import unisul.a3.service.MovimentacaoService;
 
@@ -18,6 +19,8 @@ class MovimentacaoControllerTest {
 
     @BeforeEach
     void setup() throws Exception {
+
+        DatabaseInitializer.initialize();
 
         controller = new MovimentacaoController();
 

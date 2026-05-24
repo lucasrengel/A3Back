@@ -2,6 +2,7 @@ package unisul.a3.service;
 
 import org.junit.jupiter.api.*;
 import unisul.a3.config.DatabaseConnection;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.Categoria;
 import unisul.a3.model.Movimentacao;
 import unisul.a3.model.Produto;
@@ -28,6 +29,8 @@ class MovimentacaoServiceTest {
 
     @BeforeEach
     void setup() throws Exception {
+
+        DatabaseInitializer.initialize();
 
         movimentacaoService = new MovimentacaoService();
         produtoService = new ProdutoService();

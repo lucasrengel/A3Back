@@ -2,6 +2,7 @@ package unisul.a3.service;
 
 import org.junit.jupiter.api.*;
 import unisul.a3.config.DatabaseConnection;
+import unisul.a3.config.DatabaseInitializer;
 import unisul.a3.model.*;
 
 import java.lang.reflect.Field;
@@ -28,6 +29,8 @@ class RelatorioServiceTest {
 
     @BeforeEach
     void setup() throws Exception {
+
+        DatabaseInitializer.initialize();
 
         relatorioService = new RelatorioService();
         produtoService = new ProdutoService();
