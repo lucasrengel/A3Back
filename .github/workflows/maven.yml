@@ -44,5 +44,15 @@ jobs:
         run: |
           sleep 20
 
-      - name: Executar testes
-        run: mvn clean test
+      - name: Executar testes e gerar cobertura
+        run: mvn clean verify
+
+      - name: Análise SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=lucasrengel_A3Back \
+            -Dsonar.organization=lucasrengel \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${SONAR_TOKEN}
