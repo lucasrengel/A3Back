@@ -5,11 +5,6 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
 
-    private static final String URL =
-            System.getProperty(
-                    "db.url",
-                    "jdbc:mysql://localhost:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8"
-            );
     private static final String USER = "root";
     private static final String PASSWORD = "12345";
 
