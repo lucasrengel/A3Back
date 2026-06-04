@@ -196,4 +196,28 @@ class ProdutoServiceTest {
                 0.01
         );
     }
+    @Test
+    void deveLancarErroAoAjustarPrecosQuandoBancoFalhar() {
+
+        String urlOriginal = System.getProperty("db.url");
+
+        try {
+
+            System.setProperty(
+                    "db.url",
+                    "jdbc:mysql://localhost:9999/banco_inexistente"
+            );
+
+            assertThrows(
+                    RuntimeException.class,
+                    () -> produtoService.ajustarPrecos(10)
+            );
+
+        } finally {
+
+            if (urlOriginal != null) {
+                System.setProperty("db.url", urlOriginal);
+            }
+        }
+    }
 }

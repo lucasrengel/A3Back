@@ -123,8 +123,31 @@ class ProdutoControllerTest {
 
         assertNotNull(response);
     }
+    @Test
+    void deveRetornarErroAoAjustarPrecosSemPercentual() {
 
+        Map<String, Double> body = new HashMap<>();
 
+        ResponseEntity<?> response =
+                controller.ajustarPrecos(body);
 
+        assertEquals(
+                HttpStatus.BAD_REQUEST,
+                response.getStatusCode()
+        );
+    }
+    @Test
+    void deveAjustarPrecosComSucesso() {
 
+        Map<String, Double> body = new HashMap<>();
+        body.put("percentual", 10.0);
+
+        ResponseEntity<?> response =
+                controller.ajustarPrecos(body);
+
+        assertEquals(
+                HttpStatus.OK,
+                response.getStatusCode()
+        );
+    }
 }
