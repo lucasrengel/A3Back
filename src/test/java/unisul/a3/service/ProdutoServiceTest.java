@@ -75,6 +75,8 @@ class ProdutoServiceTest {
         assertEquals("Coca-Cola", resultado.getNome());
     }
 
+
+
     @Test
     void deveListarProdutos() {
 
@@ -162,6 +164,36 @@ class ProdutoServiceTest {
         assertEquals(
                 "Produto Critico",
                 abaixoMinimo.get(0).getNome()
+        );
+    }
+
+    @Test
+    void deveAjustarPrecos() {
+
+        long categoriaId = criarCategoria();
+
+        Produto produto =
+                new Produto(
+                        "Produto Teste",
+                        100.0,
+                        "UN",
+                        10,
+                        1,
+                        100,
+                        categoriaId
+                );
+
+        produtoService.adicionar(produto);
+
+        produtoService.ajustarPrecos(10);
+
+        Produto atualizado =
+                produtoService.buscarPorId(produto.getId());
+
+        assertEquals(
+                110.0,
+                atualizado.getPrecoUnitario(),
+                0.01
         );
     }
 }

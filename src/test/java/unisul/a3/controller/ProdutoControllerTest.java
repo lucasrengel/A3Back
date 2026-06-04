@@ -9,7 +9,9 @@ import unisul.a3.model.Produto;
 import unisul.a3.service.ProdutoService;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -100,10 +102,29 @@ class ProdutoControllerTest {
         assertNotNull(response);
     }
 
+
+
+
     @Test
     void deveRetornar404QuandoProdutoNaoExiste() {
         ResponseEntity<?> response = controller.buscar(999999L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    void deveAjustarPrecos() {
+
+        Map<String, Double> body = new HashMap<>();
+        body.put("percentual", 10.0);
+
+        ResponseEntity<?> response =
+                controller.ajustarPrecos(body);
+
+        assertNotNull(response);
+    }
+
+
+
+
 }
