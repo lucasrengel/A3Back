@@ -5,8 +5,11 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
 
-    private static final String USER = "root";
-    private static final String PASSWORD = "12345678";
+    private static final String USER =
+            System.getProperty("db.user", "root");
+
+    private static final String PASSWORD =
+            System.getProperty("db.password", "");
 
     public static Connection getConnection() {
         try {
