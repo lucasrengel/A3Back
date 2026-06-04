@@ -60,4 +60,32 @@ public class ProdutoController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PostMapping("/ajustar-precos")
+    public ResponseEntity<?> ajustarPrecos(
+            @RequestBody Map<String, Double> body) {
+
+        try {
+
+            Double percentual = body.get("percentual");
+
+            service.ajustarPrecos(percentual);
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "success", true,
+                            "message", "Preços ajustados com sucesso!"
+                    )
+            );
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "success", false,
+                            "error", e.getMessage()
+                    )
+            );
+        }
+    }
 }

@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class DatabaseConnection {
 
     private static final String USER = "root";
-    private static final String PASSWORD = "12345";
+    private static final String PASSWORD = "12345678";
 
     public static Connection getConnection() {
         try {

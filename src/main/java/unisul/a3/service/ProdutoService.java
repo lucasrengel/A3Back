@@ -114,6 +114,26 @@ public class ProdutoService {
         }
     }
 
+    public void ajustarPrecos(double percentual) {
+
+        String sql =
+                "UPDATE produto SET preco = preco + (preco * ? / 100)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDouble(1, percentual);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Erro ao ajustar preços: " + e.getMessage(),
+                    e
+            );
+        }
+    }
+
     public List<Produto> listarAbaixoMinimo() {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT id, nome, preco, unidade, quantidadeEstoque, quantidadeMinima, quantidadeMaxima, categoriaId FROM produto WHERE quantidadeEstoque < quantidadeMinima";
