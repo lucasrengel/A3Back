@@ -1,117 +1,284 @@
-# A3Back - API de Controle de Estoque
+# A3Back - Sistema de Controle de Estoque
 
-Backend desenvolvido para a A3 de Sistemas Distribuidos e Mobile, responsável por fornecer a API REST para o sistema de gerenciamento de estoque. O projeto utiliza **Java** com **Spring Boot** e banco de dados **MySQL**.
+Sistema legado utilizado na A3 de Gestão e Qualidade de Software da Universidade do Sul de Santa Catarina (UNISUL).
+
+O projeto consiste em uma API REST para gerenciamento de estoque, desenvolvida em Java com Spring Boot e banco de dados MySQL. Durante a disciplina foram aplicadas práticas de garantia da qualidade de software com foco em testes automatizados, integração contínua, análise estática de código e controle de versão.
+
+## Objetivos da A3
+
+Durante o desenvolvimento desta atividade foram implementadas as seguintes práticas de qualidade:
+
+* Testes automatizados utilizando JUnit;
+* Cobertura de código utilizando JaCoCo;
+* Integração contínua utilizando GitHub Actions;
+* Análise estática de código utilizando SonarCloud;
+* Controle de versão utilizando Git e GitHub;
+* Monitoramento da qualidade por meio de métricas e Quality Gate.
+
+## 👥 Integrantes
+
+| Nome                            | GitHub          | RA          |
+| ------------------------------- | --------------- | ----------- |
+| Lucas Rengel                    | @lucasrengel    | 10724110009 |
+| Antonio Victor Iaroseski Segala | @antoniovsegala | 1072417746  |
+| Isadora Luchtenberg Fernandes   | @isaluch        | 1072417018  |
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Java 17**
-- **Spring Boot 3.2.0**
-- **Maven** - Gerenciamento de dependências e build
-- **MySQL** - Banco de dados relacional
-- **Spring Data JPA** - Persistência de dados
+* Java 17
+* Spring Boot 3.2.0
+* Maven
+* MySQL 8.0
+* Spring Data JPA
+* JUnit 5
+* JaCoCo
+* GitHub Actions
+* SonarCloud
+* GitHub
+
+---
 
 ## 📋 Pré-requisitos
 
-- [Java JDK 17+](https://www.oracle.com/java/technologies/downloads/)
-- [Maven](https://maven.apache.org/download.cgi) (Opcional se usar o wrapper ou IDE)
-- [MySQL Server](https://dev.mysql.com/downloads/mysql/)
+* Java JDK 17+
+* Maven
+* MySQL Server 8.0+
+
+---
 
 ## 🔰 Guia para Iniciantes (Não tenho Maven)
 
-### Opção A: Instalação Rápida via Terminal (Recomendado)
+### Opção A: Instalação via Winget
 
-Se você usa Windows 10 ou 11, pode instalar tudo pelo terminal usando o **Winget** (Gerenciador de Pacotes do Windows).
+Abra o PowerShell ou CMD como Administrador e execute:
 
-1.  Abra o **PowerShell** ou **CMD** como Administrador.
-2.  Digite o seguinte comando e aperte Enter:
-    ```powershell
-    winget install Maven.Maven
-    ```
-3.  Aguarde a instalação finalizar.
-4.  Feche e abra o terminal novamente para atualizar.
-5.  Verifique se funcionou digitando: `mvn -v`
+```powershell
+winget install Maven.Maven
+```
 
-### Opção B: Instalação Manual (Passo a Passo)
+Após a instalação:
 
-Se a opção acima não funcionar, siga estes passos manuais:
+```bash
+mvn -v
+```
 
-1.  **Baixe o Maven**:
-    - Acesse [maven.apache.org/download.cgi](https://maven.apache.org/download.cgi).
-    - Baixe o arquivo "Binary zip archive" (ex: `apache-maven-3.9.9-bin.zip`).
+---
 
-2.  **Instale**:
-    - Extraia o arquivo ZIP em uma pasta de sua preferência (ex: `C:\Program Files\Maven`).
+### Opção B: Instalação Manual
 
-3.  **Configure o PATH (Variáveis de Ambiente)**:
-    - Pesquise no Windows por "Editar as variáveis de ambiente do sistema".
-    - Clique em "Variáveis de Ambiente".
-    - Em "Variáveis do sistema", encontre a variável `Path` e clique em "Editar".
-    - Clique em "Novo" e adicione o caminho da pasta `bin` do Maven que você extraiu (ex: `C:\Program Files\Maven\apache-maven-3.9.9\bin`).
-    - Clique em OK em tudo.
+1. Baixe o Maven:
+   https://maven.apache.org/download.cgi
 
-4.  **Verifique**:
-    - Abra um novo terminal (CMD ou PowerShell) e digite:
-      ```bash
-      mvn -v
-      ```
-    - Se aparecer a versão do Maven, está tudo pronto!
+2. Extraia o arquivo ZIP em uma pasta de sua preferência.
+
+3. Configure o PATH do sistema adicionando a pasta:
+
+```text
+C:\Program Files\Maven\apache-maven-x.x.x\bin
+```
+
+4. Verifique a instalação:
+
+```bash
+mvn -v
+```
+
+---
 
 ## ⚙️ Configuração do Banco de Dados
 
-1. Crie um banco de dados no MySQL chamado `estoque_db` (ou outro nome de sua preferência).
-2. Configure as credenciais no arquivo `\src\main\java\unisul\a3\config\DatabaseConnection.java`:
+Crie um banco de dados MySQL chamado:
 
-```properties
-    private static final String USER = "root";
-    private static final String PASSWORD = "12345";
+```sql
+CREATE DATABASE estoque_db;
 ```
 
-> **Nota:** Certifique-se de alterar `seu_usuario` e `sua_senha` para as credenciais do seu MySQL local.
+Configure as credenciais no arquivo:
+
+```text
+src/main/java/unisul/a3/config/DatabaseConnection.java
+```
+
+Exemplo:
+
+```java
+private static final String USER = "root";
+private static final String PASSWORD = "12345";
+```
+
+---
 
 ## 🔧 Como Executar
 
-### Opção 1: Via Script (Windows)
+### Opção 1: Via Script
 
-Execute o arquivo `run.bat` na raiz do projeto.
+Execute o arquivo:
 
-### Opção 2: Via Linha de Comando (Maven)
+```text
+run.bat
+```
 
-1. Acesse a pasta do projeto:
-   ```bash
-   cd A3Back
-   ```
+---
 
-2. Execute o comando para rodar:
-   ```bash
-   mvn spring-boot:run
-   ```
+### Opção 2: Via Maven
 
-A API estará disponível em `http://localhost:8080`.
+Entre na pasta do projeto:
+
+```bash
+cd A3Back
+```
+
+Execute:
+
+```bash
+mvn spring-boot:run
+```
+
+A API ficará disponível em:
+
+```text
+http://localhost:8080
+```
+
+---
+
+## 🧪 Qualidade de Software
+
+Durante esta atividade foram implementadas práticas de garantia da qualidade:
+
+### Testes Automatizados
+
+* Framework: JUnit 5
+* Cobertura de código: JaCoCo
+* Cobertura alcançada: 80%
+
+### Integração Contínua
+
+Pipeline configurada utilizando GitHub Actions para:
+
+* Compilar o projeto;
+* Executar os testes automatizados;
+* Validar alterações enviadas ao repositório.
+
+### Análise Estática
+
+Análise realizada utilizando SonarCloud para monitoramento de:
+
+* Segurança;
+* Confiabilidade;
+* Manutenibilidade;
+* Duplicação de código;
+* Cobertura de testes.
+
+Quality Gate aprovado.
+
+---
 
 ## 🔌 Endpoints da API
 
-### Produtos
-- `GET /api/produtos` - Lista todos os produtos
-- `GET /api/produtos/{id}` - Busca um produto por ID
-- `POST /api/produtos` - Cria um novo produto
-- `PUT /api/produtos/{id}` - Atualiza um produto
-- `DELETE /api/produtos/{id}` - Remove um produto
-
 ### Categorias
-- `GET /api/categorias` - Lista todas as categorias
-- `POST /api/categorias` - Cria uma nova categoria
-- `PUT /api/categorias/{id}` - Atualiza uma categoria
-- `DELETE /api/categorias/{id}` - Remove uma categoria
+
+| Método | Endpoint             |
+| ------ | -------------------- |
+| GET    | /api/categorias      |
+| GET    | /api/categorias/{id} |
+| POST   | /api/categorias      |
+| PUT    | /api/categorias/{id} |
+| DELETE | /api/categorias/{id} |
+
+---
+
+### Produtos
+
+| Método | Endpoint           |
+| ------ | ------------------ |
+| GET    | /api/produtos      |
+| GET    | /api/produtos/{id} |
+| POST   | /api/produtos      |
+| PUT    | /api/produtos/{id} |
+| DELETE | /api/produtos/{id} |
+
+---
 
 ### Movimentações
-- `GET /api/movimentacoes` - Lista o histórico de movimentações
-- `POST /api/movimentacoes` - Registra uma entrada ou saída
-- `DELETE /api/movimentacoes/{id}` - Remove uma movimentação (estorna o estoque)
+
+| Método | Endpoint                |
+| ------ | ----------------------- |
+| GET    | /api/movimentacoes      |
+| GET    | /api/movimentacoes/{id} |
+| POST   | /api/movimentacoes      |
+| PUT    | /api/movimentacoes/{id} |
+| DELETE | /api/movimentacoes/{id} |
+
+---
 
 ### Relatórios
-- `GET /api/relatorios/lista-precos` - Lista de preços simplificada
-- `GET /api/relatorios/balanco` - Valor total do estoque
-- `GET /api/relatorios/abaixo-minimo` - Produtos com estoque baixo
-- `GET /api/relatorios/por-categoria` - Contagem de produtos por categoria
-- `GET /api/relatorios/maiores-movimentacoes` - Maior entrada e maior saída registrada
 
+| Método | Endpoint                              |
+| ------ | ------------------------------------- |
+| GET    | /api/relatorios/lista-precos          |
+| GET    | /api/relatorios/balanco               |
+| GET    | /api/relatorios/abaixo-minimo         |
+| GET    | /api/relatorios/por-categoria         |
+| GET    | /api/relatorios/maiores-movimentacoes |
+
+---
+
+## 📝 Convenção de Commits
+
+Para manter a rastreabilidade das alterações, o projeto utiliza uma convenção padronizada de commits.
+
+| Prefixo  | Descrição                                     |
+| -------- | --------------------------------------------- |
+| feat     | Nova funcionalidade                           |
+| fix      | Correção de defeito                           |
+| test     | Adição ou atualização de testes               |
+| docs     | Alterações de documentação                    |
+| refactor | Refatoração sem alteração de comportamento    |
+| ci       | Alterações relacionadas à integração contínua |
+| build    | Configurações de build e dependências         |
+
+### Exemplos
+
+```bash
+feat: adiciona cadastro de produto
+fix: corrige cálculo de movimentação
+test: adiciona testes para categoria
+docs: atualiza README
+refactor: melhora organização do código
+ci: adiciona pipeline github actions
+build: configura jacoco
+```
+
+---
+
+## 📊 Métricas do Projeto
+
+* Cobertura de testes: 80%
+* GitHub Actions configurado
+* SonarCloud integrado
+* Quality Gate aprovado
+* Testes automatizados executados a cada push
+
+---
+
+## 🔗 Repositórios
+
+Backend:
+https://github.com/lucasrengel/A3Back
+
+Frontend:
+https://github.com/lucasrengel/A3Front
+
+---
+
+## 📚 Disciplina
+
+A3 – Gestão e Qualidade de Software
+
+Universidade do Sul de Santa Catarina – UNISUL
+
+Palhoça – SC
+2026
