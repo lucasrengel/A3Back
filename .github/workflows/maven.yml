@@ -3,7 +3,6 @@ name: Java CI
 on:
   push:
     branches:
-      - master
       - main
 
   pull_request:
@@ -20,7 +19,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: 12345678
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: estoque_test
         ports:
           - 3306:3306
