@@ -48,6 +48,16 @@ Durante o desenvolvimento desta atividade foram implementadas as seguintes prát
 
 ---
 
+## 📊 Qualidade do Código
+
+O projeto utiliza SonarCloud para análise estática de código, monitoramento de qualidade e validação do Quality Gate.
+
+### SonarCloud
+
+https://sonarcloud.io/project/overview?id=lucasrengel_A3Back
+
+---
+
 ## 🔰 Guia para Iniciantes (Não tenho Maven)
 
 ### Opção A: Instalação via Winget
